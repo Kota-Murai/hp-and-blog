@@ -90,8 +90,8 @@ const ContactSection: React.FC = () => {
     // mb-20はスマホの場合以外に適用する
     <section id="contact" className="min-h-screen bg-background py-20 md:mb-20">
       <div className="max-w-7xl mx-auto px-4">
-        <h2 className="text-3xl md:text-5xl font-bold text-center">Contact</h2>
-        <p className="text-center text-gray-700">
+        <h2 className="text-3xl md:text-5xl font-bold text-center mb-10">Contact</h2>
+        <p className="text-center text-gray-700 mb-10">
           下記問い合わせフォームもしくはSNSのDMからお問い合わせください。
         </p>
 
