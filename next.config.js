@@ -10,6 +10,9 @@ const nextConfig = {
     ],
   },
   serverExternalPackages: ['pg'],
+  env: {
+    DATABASE_URL: process.env.DATABASE_URL,
+  },
 };
 
 module.exports = nextConfig;
