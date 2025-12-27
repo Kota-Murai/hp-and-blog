@@ -15,63 +15,71 @@ interface Props {
 
 // 動的メタデータ（rel=prev/next対応）
 export async function generateMetadata({ searchParams }: Props): Promise<Metadata> {
-  const params = await searchParams
-  const currentPage = Math.max(1, parseInt(params.page || '1') || 1)
-  const categorySlug = params.category || null
-  const tagSlug = params.tag || null
+  try {
+    const params = await searchParams
+    const currentPage = Math.max(1, parseInt(params.page || '1') || 1)
+    const categorySlug = params.category || null
+    const tagSlug = params.tag || null
 
-  // フィルタ条件を構築
-  const whereCondition: Prisma.blog_postsWhereInput = {
-    status: 'published',
-  }
+    // フィルタ条件を構築
+    const whereCondition: Prisma.blog_postsWhereInput = {
+      status: 'published',
+    }
 
-  if (categorySlug) {
-    whereCondition.category = { slug: categorySlug }
-  }
-  if (tagSlug) {
-    whereCondition.tags = { some: { tag: { slug: tagSlug } } }
-  }
+    if (categorySlug) {
+      whereCondition.category = { slug: categorySlug }
+    }
+    if (tagSlug) {
+      whereCondition.tags = { some: { tag: { slug: tagSlug } } }
+    }
 
-  const totalItems = await prisma.blog_posts.count({ where: whereCondition })
-  const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE)
+    const totalItems = await prisma.blog_posts.count({ where: whereCondition })
+    const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE)
 
-  // ベースURLを構築
-  const buildPageUrl = (page: number) => {
-    const filterParams = new URLSearchParams()
-    if (page > 1) filterParams.set('page', page.toString())
-    if (categorySlug) filterParams.set('category', categorySlug)
-    if (tagSlug) filterParams.set('tag', tagSlug)
-    const queryString = filterParams.toString()
-    return queryString ? `${BASE_URL}/blog?${queryString}` : `${BASE_URL}/blog`
-  }
+    // ベースURLを構築
+    const buildPageUrl = (page: number) => {
+      const filterParams = new URLSearchParams()
+      if (page > 1) filterParams.set('page', page.toString())
+      if (categorySlug) filterParams.set('category', categorySlug)
+      if (tagSlug) filterParams.set('tag', tagSlug)
+      const queryString = filterParams.toString()
+      return queryString ? `${BASE_URL}/blog?${queryString}` : `${BASE_URL}/blog`
+    }
 
-  // alternates（canonical, prev, next）
-  const alternates: Metadata['alternates'] = {
-    canonical: buildPageUrl(currentPage),
-  }
+    // alternates（canonical, prev, next）
+    const alternates: Metadata['alternates'] = {
+      canonical: buildPageUrl(currentPage),
+    }
 
-  // タイトルとdescription
-  let title = 'ブログ | Kota Murai Life & Code'
-  let description = 'プログラミングや技術、趣味などについてのブログ記事'
+    // タイトルとdescription
+    let title = 'ブログ | Kota Murai Life & Code'
+    let description = 'プログラミングや技術、趣味などについてのブログ記事'
 
-  if (currentPage > 1) {
-    title = `ブログ (${currentPage}ページ目) | Kota Murai Life & Code`
-    description = `プログラミングや技術、趣味などについてのブログ記事（${currentPage}ページ目）`
-  }
+    if (currentPage > 1) {
+      title = `ブログ (${currentPage}ページ目) | Kota Murai Life & Code`
+      description = `プログラミングや技術、趣味などについてのブログ記事（${currentPage}ページ目）`
+    }
 
-  const other: Record<string, string> = {}
-  if (currentPage > 1) {
-    other['link:prev'] = buildPageUrl(currentPage - 1)
-  }
-  if (currentPage < totalPages) {
-    other['link:next'] = buildPageUrl(currentPage + 1)
-  }
+    const other: Record<string, string> = {}
+    if (currentPage > 1) {
+      other['link:prev'] = buildPageUrl(currentPage - 1)
+    }
+    if (currentPage < totalPages) {
+      other['link:next'] = buildPageUrl(currentPage + 1)
+    }
 
-  return {
-    title,
-    description,
-    alternates,
-    ...(Object.keys(other).length > 0 ? { other } : {}),
+    return {
+      title,
+      description,
+      alternates,
+      ...(Object.keys(other).length > 0 ? { other } : {}),
+    }
+  } catch (error) {
+    console.error('generateMetadata error:', error)
+    return {
+      title: 'ブログ | Kota Murai Life & Code',
+      description: 'プログラミングや技術、趣味などについてのブログ記事',
+    }
   }
 }
 
