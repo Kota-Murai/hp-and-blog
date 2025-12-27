@@ -1,42 +1,43 @@
 "use client"
 
-import { Menu, X } from "lucide-react"
+import { Menu } from "lucide-react"
 import Link from "next/link"
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
+import { Sheet, SheetContent, SheetTrigger, SheetTitle } from "@/components/ui/sheet"
+import { VisuallyHidden } from "@radix-ui/react-visually-hidden"
 import Image from "next/image"
 import { useState } from "react"
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip"
 
 export function MobileNav() {
   const [isOpen, setIsOpen] = useState(false)
 
-  const toggleMenu = () => {
-    setIsOpen(!isOpen)
+  const closeMenu = () => {
+    setIsOpen(false)
   }
 
   return (
     <Sheet open={isOpen} onOpenChange={setIsOpen}>
       <SheetTrigger asChild>
-        <button className="p-2" onClick={toggleMenu}>
-          <Menu className="h-6 w-6" />
+        <button className="p-2" type="button" aria-label="メニューを開く">
+          <Menu className="h-6 w-6" aria-hidden="true" />
         </button>
       </SheetTrigger>
       <SheetContent side="left" className="w-[300px] sm:w-[400px] p-0">
+        {/* アクセシビリティ用の非表示タイトル */}
+        <VisuallyHidden>
+          <SheetTitle>ナビゲーションメニュー</SheetTitle>
+        </VisuallyHidden>
         <div className="h-[72px] bg-gradient-to-br from-white via-emerald-100 to-white p-4 flex items-center justify-between">
-          <button onClick={toggleMenu} className="p-2">
-            <Menu className="h-6 w-6" />
+          <button onClick={closeMenu} className="p-2" type="button" aria-label="メニューを閉じる">
+            <Menu className="h-6 w-6" aria-hidden="true" />
           </button>
           <div className="flex items-center space-x-2">
             <Image
               src="/logo.webp"
-              alt="Logo"
+              alt="サイトロゴ"
               width={60}
               height={60}
+              sizes="48px"
+              quality={85}
               className="w-12 h-10"
             />
             <span className="text-base font-bold">Kota Murai Life&Code</span>
@@ -44,55 +45,47 @@ export function MobileNav() {
         </div>
         <nav className="flex flex-col gap-4 p-4">
           <Link
-            href="#top"
+            href="/#top"
             className="block text-lg hover:text-emerald-600"
-            onClick={toggleMenu}
+            onClick={closeMenu}
           >
             トップ
           </Link>
           <Link
-            href="#about"
+            href="/#about"
             className="block text-lg hover:text-emerald-600"
-            onClick={toggleMenu}
+            onClick={closeMenu}
           >
             このサイトについて
           </Link>
           <Link
-            href="#profile"
+            href="/#profile"
             className="block text-lg hover:text-emerald-600"
-            onClick={toggleMenu}
+            onClick={closeMenu}
           >
             プロフィール
           </Link>
           <Link
-            href="#skills"
+            href="/#skills"
             className="block text-lg hover:text-emerald-600"
-            onClick={toggleMenu}
+            onClick={closeMenu}
           >
             スキル
           </Link>
           <Link
-            href="#contact"
+            href="/#contact"
             className="block text-lg hover:text-emerald-600"
-            onClick={toggleMenu}
+            onClick={closeMenu}
           >
             お問い合わせ
           </Link>
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <span 
-                  className="block text-lg hover:text-emerald-600 cursor-pointer" 
-                  onClick={toggleMenu}
-                >
-                  ブログ
-                </span>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>準備中です</p>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
+          <Link
+            href="/blog"
+            className="block text-lg hover:text-emerald-600"
+            onClick={closeMenu}
+          >
+            ブログ
+          </Link>
         </nav>
       </SheetContent>
     </Sheet>

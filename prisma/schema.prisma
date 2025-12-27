@@ -1,0 +1,122 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model blog_posts {
+  id            String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  title         String    @db.VarChar(200)
+  slug          String    @unique @db.VarChar(200)
+  content       String
+  excerpt       String?   @db.VarChar(500)
+  thumbnail_url String?
+  status        String    @default("draft") @db.VarChar(20)
+  published_at  DateTime? @db.Timestamptz(6)
+  created_at    DateTime? @default(now()) @db.Timestamptz(6)
+  updated_at    DateTime? @default(now()) @db.Timestamptz(6)
+  author_id     String?   @db.Uuid
+  category_id   String?   @db.Uuid
+
+  category      blog_categories?        @relation(fields: [category_id], references: [id], onDelete: SetNull)
+  tags          blog_post_tags[]
+  views         blog_post_views[]
+  views_daily   blog_post_views_daily[]
+  views_monthly blog_post_views_monthly[]
+
+  @@index([published_at(sort: Desc)], map: "idx_blog_posts_published_at")
+  @@index([slug], map: "idx_blog_posts_slug")
+  @@index([status], map: "idx_blog_posts_status")
+  @@index([category_id], map: "idx_blog_posts_category_id")
+}
+
+/// カテゴリマスタ
+model blog_categories {
+  id          String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  name        String    @unique @db.VarChar(50)
+  slug        String    @unique @db.VarChar(50)
+  description String?
+  created_at  DateTime? @default(now()) @db.Timestamptz(6)
+
+  posts blog_posts[]
+
+  @@index([slug], map: "idx_blog_categories_slug")
+}
+
+/// タグマスタ
+model blog_tags {
+  id         String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  name       String    @unique @db.VarChar(50)
+  slug       String    @unique @db.VarChar(50)
+  created_at DateTime? @default(now()) @db.Timestamptz(6)
+
+  posts blog_post_tags[]
+
+  @@index([slug], map: "idx_blog_tags_slug")
+}
+
+/// 記事とタグの中間テーブル
+model blog_post_tags {
+  post_id String @db.Uuid
+  tag_id  String @db.Uuid
+
+  post blog_posts @relation(fields: [post_id], references: [id], onDelete: Cascade)
+  tag  blog_tags  @relation(fields: [tag_id], references: [id], onDelete: Cascade)
+
+  @@id([post_id, tag_id])
+  @@index([post_id], map: "idx_blog_post_tags_post_id")
+  @@index([tag_id], map: "idx_blog_post_tags_tag_id")
+}
+
+/// 記事閲覧履歴（詳細データ、90日間保持後削除）
+model blog_post_views {
+  id         String   @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  post_id    String   @db.Uuid
+  viewed_at  DateTime @default(now()) @db.Timestamptz(6)
+  ip_hash    String?  @db.VarChar(64)
+  user_agent String?
+
+  post blog_posts @relation(fields: [post_id], references: [id], onDelete: Cascade)
+
+  @@index([post_id], map: "idx_blog_post_views_post_id")
+  @@index([viewed_at], map: "idx_blog_post_views_viewed_at")
+  @@index([ip_hash], map: "idx_blog_post_views_ip_hash")
+}
+
+/// 日別閲覧数集計
+model blog_post_views_daily {
+  id              String   @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  post_id         String   @db.Uuid
+  date            DateTime @db.Date
+  view_count      Int      @default(0)
+  unique_visitors Int      @default(0)
+  device_stats    Json     @default("{}")
+  created_at      DateTime @default(now()) @db.Timestamptz(6)
+
+  post blog_posts @relation(fields: [post_id], references: [id], onDelete: Cascade)
+
+  @@unique([post_id, date])
+  @@index([post_id], map: "idx_blog_post_views_daily_post_id")
+  @@index([date(sort: Desc)], map: "idx_blog_post_views_daily_date")
+}
+
+/// 月別閲覧数集計
+model blog_post_views_monthly {
+  id              String   @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  post_id         String   @db.Uuid
+  year_month      String   @db.VarChar(7)
+  view_count      Int      @default(0)
+  unique_visitors Int      @default(0)
+  device_stats    Json     @default("{}")
+  created_at      DateTime @default(now()) @db.Timestamptz(6)
+
+  post blog_posts @relation(fields: [post_id], references: [id], onDelete: Cascade)
+
+  @@unique([post_id, year_month])
+  @@index([post_id], map: "idx_blog_post_views_monthly_post_id")
+  @@index([year_month(sort: Desc)], map: "idx_blog_post_views_monthly_year_month")
+}

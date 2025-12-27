@@ -3,7 +3,9 @@ import Image from "next/image";
 
 const TopSection: React.FC = () => {
   return (
-    <section className="relative h-screen w-full overflow-hidden">
+    // Web版: ヘッダー高さ(約80px)を引いた高さ、スマホ版: 100vh
+    // 背景色を暗めに設定して、画像読み込み前の灰色を目立たなくする
+    <section className="relative h-screen md:h-[calc(100vh-80px)] w-full overflow-hidden bg-slate-800">
       {/* 背景画像 */}
       <div className="absolute inset-0 animate-[fadeIn_1.2s_ease-out_forwards]">
         <Image
@@ -25,12 +27,14 @@ const TopSection: React.FC = () => {
 
       {/* コンテンツ */}
       <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-4 animate-[fadeIn_1.2s_ease-out_0.3s_forwards] opacity-0">
-        <Image 
-          src="/logo.webp" 
-          alt="Logo" 
-          width={120} 
+        <Image
+          src="/logo.webp"
+          alt="サイトロゴ"
+          width={120}
           height={120}
-          priority 
+          sizes="120px"
+          quality={85}
+          priority
         />
         <h1 className="mt-4 text-4xl md:text-6xl font-bold text-white">
           Kota Murai Life&Code

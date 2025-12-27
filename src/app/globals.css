@@ -113,3 +113,97 @@ section {
     @apply bg-background text-foreground;
   }
 }
+
+/* コードブロックのスタイル */
+.prose pre {
+  @apply bg-gray-50 border border-gray-200 rounded-lg overflow-x-auto;
+  padding: 1rem;
+  margin: 1rem 0;
+}
+
+.prose pre code {
+  @apply text-sm leading-relaxed;
+  background: transparent !important;
+  padding: 0 !important;
+}
+
+.prose code:not(pre code) {
+  @apply bg-gray-100 text-emerald-700 px-1.5 py-0.5 rounded text-sm font-mono;
+}
+
+/* highlight.js のカスタマイズ */
+.hljs {
+  background: transparent !important;
+  padding: 0 !important;
+}
+
+/* 折りたたみ（details/summary）のスタイル */
+.prose details {
+  @apply bg-gray-50 border border-gray-200 rounded-lg my-4;
+}
+
+.prose details summary {
+  @apply cursor-pointer px-4 py-3 font-medium hover:bg-gray-100 rounded-lg;
+}
+
+.prose details[open] summary {
+  @apply border-b border-gray-200 rounded-b-none;
+}
+
+.prose details > *:not(summary) {
+  @apply px-4 py-3;
+}
+
+/* タスクリストのスタイル */
+.prose ul:has(input[type="checkbox"]) {
+  @apply list-none pl-0;
+}
+
+.prose li:has(input[type="checkbox"]) {
+  @apply flex items-start gap-2;
+}
+
+.prose input[type="checkbox"] {
+  @apply mt-1.5 h-4 w-4 rounded border-gray-300 accent-emerald-600;
+}
+
+/* テーブルのスタイル */
+.prose table {
+  @apply w-full border-collapse my-4;
+}
+
+.prose th {
+  @apply bg-gray-100 border border-gray-300 px-4 py-2 text-left font-semibold;
+}
+
+.prose td {
+  @apply border border-gray-300 px-4 py-2;
+}
+
+.prose tr:nth-child(even) {
+  @apply bg-gray-50;
+}
+
+/* 引用（blockquote）のスタイル - アラート風 */
+.prose blockquote {
+  @apply border-l-4 border-emerald-500 bg-emerald-50 pl-4 py-2 my-4 italic text-gray-700;
+}
+
+/* 水平線 */
+.prose hr {
+  @apply border-gray-300 my-8;
+}
+
+
+/* フォーカスインジケーターの強化 */
+*:focus-visible {
+  outline: 2px solid #059669; /* emerald-600 */
+  outline-offset: 2px;
+}
+
+/* ボタン・リンクのフォーカス状態 */
+button:focus-visible,
+a:focus-visible {
+  @apply ring-2 ring-emerald-600 ring-offset-2;
+  outline: none;
+}

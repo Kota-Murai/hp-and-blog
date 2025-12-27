@@ -1,0 +1,32 @@
+name: Analytics Aggregation
+
+on:
+  schedule:
+    # 毎日午前3時（JST）= UTC 18:00
+    - cron: '0 18 * * *'
+  workflow_dispatch: # 手動実行用
+
+jobs:
+  aggregate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run Analytics Aggregation
+        run: |
+          response=$(curl -s -w "\n%{http_code}" -X POST \
+            "${{ secrets.SITE_URL }}/api/admin/analytics/aggregate" \
+            -H "Content-Type: application/json" \
+            -H "Authorization: Bearer ${{ secrets.ANALYTICS_API_KEY }}" \
+            -d '{"type": "all"}')
+
+          http_code=$(echo "$response" | tail -n1)
+          body=$(echo "$response" | sed '$d')
+
+          echo "Response: $body"
+          echo "HTTP Status: $http_code"
+
+          if [ "$http_code" != "200" ]; then
+            echo "API call failed with status $http_code"
+            exit 1
+          fi
+
+          echo "Aggregation completed successfully"
