@@ -48,7 +48,7 @@ const ContactSection: React.FC = () => {
   const [isConsentGiven, setIsConsentGiven] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isSuccess, setIsSuccess] = useState(false)
-  const [isError, setIsError] = useState(false)
+  const [errorMessage, setErrorMessage] = useState<string | null>(null)
 
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
@@ -63,32 +63,33 @@ const ContactSection: React.FC = () => {
   const onSubmit = async (values: FormData) => {
     setIsSubmitting(true)
     setIsSuccess(false)
-    setIsError(false)
+    setErrorMessage(null)
     try {
-      const response = await fetch("/api/contact", { // 既に正しいパスになっている場合は変更不要
+      const response = await fetch("/api/contact", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(values),
       })
-  
+
       if (response.ok) {
         setIsSuccess(true)
         form.reset()
       } else {
-        setIsError(true)
+        const data = await response.json().catch(() => ({}))
+        setErrorMessage(data.error?.message || 'エラーが発生しました。再度お試しください。')
       }
     } catch (error) {
-      setIsError(true)
+      console.error('Contact form error:', error)
+      setErrorMessage('ネットワークエラーが発生しました。接続を確認してください。')
     } finally {
       setIsSubmitting(false)
     }
   }
 
   return (
-    // mb-20はスマホの場合以外に適用する
-    <section id="contact" className="min-h-screen bg-background py-20 md:mb-20">
+    <section id="contact" className="bg-background py-20 pb-16 md:pb-48">
       <div className="max-w-7xl mx-auto px-4">
         <h2 className="text-3xl md:text-5xl font-bold text-center mb-10">Contact</h2>
         <p className="text-center text-gray-700 mb-10">
@@ -164,10 +165,10 @@ const ContactSection: React.FC = () => {
                       個人情報の取扱い(確認・同意の上、送信してください)
                     </Button>
                   </DialogTrigger>
-                  <DialogContent>
+                  <DialogContent aria-describedby="privacy-policy-description">
                     <DialogHeader>
-                      <DialogDescription>
-                        <h4 className="text-lg font-semibold mb-4">個人情報の取り扱いについて</h4>
+                      <DialogTitle>個人情報の取り扱いについて</DialogTitle>
+                      <DialogDescription id="privacy-policy-description">
                         <p>
                           このお問い合わせフォームでは、皆様から提供いただく個人情報（氏名、メールアドレス等）について、以下の方針に基づき取り扱いさせていただきます。内容をご確認いただき、同意いただける場合のみ「個人情報の取扱に同意する」ボタンを押してください。
                         </p>
@@ -236,8 +237,8 @@ const ContactSection: React.FC = () => {
           {isSuccess && (
             <p className="mt-4 text-green-600 text-center">お問い合わせが正常に送信されました。</p>
           )}
-          {isError && (
-            <p className="mt-4 text-red-600 text-center">送信中にエラーが発生しました。再度お試しください。</p>
+          {errorMessage && (
+            <p className="mt-4 text-red-600 text-center">{errorMessage}</p>
           )}
         </div>
       </div>

@@ -1,28 +1,38 @@
-"use client"
-
 import React from "react";
 import Image from "next/image";
-import { FaInstagram } from 'react-icons/fa';
-import { FaGithub } from 'react-icons/fa';
-import { FaSquareXTwitter } from "react-icons/fa6";
-import { useState, useEffect } from 'react';
+import { InstagramIcon, XTwitterIcon, GitHubIcon } from "@/components/icons/SocialIcons";
+
+// SNSリンクコンポーネント（デスクトップ用：WebURL）
+const SnsLinksDesktop: React.FC = () => (
+  <div className="hidden md:flex space-x-4 mt-6 justify-center">
+    <a href="https://instagram.com/kota.murai" target="_blank" rel="noopener noreferrer" className="text-pink-600 transition-colors" aria-label="Instagramを開く">
+      <InstagramIcon size={24} />
+    </a>
+    <a href="https://twitter.com/DevelopTopo" target="_blank" rel="noopener noreferrer" className="text-black transition-colors" aria-label="X(Twitter)を開く">
+      <XTwitterIcon size={24} />
+    </a>
+    <a href="https://github.com/Kota-Murai" target="_blank" rel="noopener noreferrer" className="text-black transition-colors" aria-label="GitHubを開く">
+      <GitHubIcon size={24} />
+    </a>
+  </div>
+)
+
+// SNSリンクコンポーネント（モバイル用：アプリリンク）
+const SnsLinksMobile: React.FC = () => (
+  <div className="flex md:hidden space-x-4 mt-6 justify-center">
+    <a href="instagram://user?username=kota.murai" target="_blank" rel="noopener noreferrer" className="text-pink-600 transition-colors" aria-label="Instagramを開く">
+      <InstagramIcon size={24} />
+    </a>
+    <a href="twitter://user?screen_name=DevelopTopo" target="_blank" rel="noopener noreferrer" className="text-black transition-colors" aria-label="X(Twitter)を開く">
+      <XTwitterIcon size={24} />
+    </a>
+    <a href="https://github.com/Kota-Murai" target="_blank" rel="noopener noreferrer" className="text-black transition-colors" aria-label="GitHubを開く">
+      <GitHubIcon size={24} />
+    </a>
+  </div>
+)
 
 const AboutSection: React.FC = () => {
-  const [isMobile, setIsMobile] = useState(false)
-
-  useEffect(() => {
-    setIsMobile(/iPhone|iPad|iPod|Android/i.test(navigator.userAgent))
-  }, [])
-
-  // SNSリンクの設定
-  const instagramUrl = isMobile
-    ? "instagram://user?username=kota.murai"
-    : "https://instagram.com/kota.murai"
-  
-  const xUrl = isMobile
-    ? "twitter://user?screen_name=DevelopTopo"
-    : "https://twitter.com/DevelopTopo"
-
   return (
     <section>
       {/* アンカースパイダー */}
@@ -54,9 +64,11 @@ const AboutSection: React.FC = () => {
           <div className="mb-8 md:mb-0 md:mr-8">
             <Image
               src="/icon.webp"
-              alt="Icon"
+              alt="プロフィール画像"
               width={150}
               height={150}
+              sizes="150px"
+              quality={85}
               className="rounded-full object-cover"
             />
           </div>
@@ -68,18 +80,9 @@ const AboutSection: React.FC = () => {
             </p>
           </div>
         </div>
-        {/* ソーシャルメディアアイコン */}
-        <div className="flex space-x-4 mt-6 justify-center">
-          <a href={instagramUrl} target="_blank" rel="noopener noreferrer" className="text-pink-600 transition-colors">
-            <FaInstagram size={24} />
-          </a>
-          <a href={xUrl} target="_blank" rel="noopener noreferrer" className="text-black transition-colors">
-            <FaSquareXTwitter size={24} />
-          </a>
-          <a href="https://github.com/Kota-Murai" target="_blank" rel="noopener noreferrer" className="text-black-600 transition-colors">
-            <FaGithub size={24} />
-          </a>
-        </div>
+        {/* ソーシャルメディアアイコン（CSSメディアクエリで出し分け） */}
+        <SnsLinksDesktop />
+        <SnsLinksMobile />
       </section>
     </section>
   );

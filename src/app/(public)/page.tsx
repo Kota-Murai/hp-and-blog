@@ -1,7 +1,7 @@
 import TopSection from "@/components/TopSection";
 import AboutSection from "@/components/AboutSection";
 import SkillsSection from "@/components/SkillsSection";
-import ContactSection from "@/components/ContactSection";
+import ContactSectionWrapper from "@/components/ContactSectionWrapper";
 
 export default function Home() {
   return (
@@ -13,7 +13,7 @@ export default function Home() {
 
       <SkillsSection />
 
-      <ContactSection />
+      <ContactSectionWrapper />
     </div>
   );
 }

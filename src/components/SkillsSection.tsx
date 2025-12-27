@@ -1,30 +1,22 @@
-"use client"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 
-import { Bar, BarChart, XAxis, YAxis, CartesianGrid } from "recharts"
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
-import {
-  ChartConfig,
-  ChartContainer,
-  ChartTooltip,
-  ChartTooltipContent,
-} from "@/components/ui/chart"
+// スキルデータの型定義
+interface SkillData {
+  name: string
+  years: number
+}
 
 // フロントエンドのスキルデータ
-const frontendData = [
-  { name: "javaScript", years: 6.5 },
-  { name: "jquery", years: 3 },
+const frontendData: SkillData[] = [
+  { name: "JavaScript", years: 6.5 },
+  { name: "jQuery", years: 3 },
   { name: "React", years: 3 },
   { name: "Next.js", years: 1 },
   { name: "Angular", years: 0.5 },
 ]
 
 // バックエンドのスキルデータ
-const backendData = [
+const backendData: SkillData[] = [
   { name: "Node.js", years: 4 },
   { name: "Express", years: 3 },
   { name: "Python", years: 3 },
@@ -34,7 +26,7 @@ const backendData = [
 ]
 
 // DevOpsのスキルデータ
-const devopsData = [
+const devopsData: SkillData[] = [
   { name: "AWS", years: 2 },
   { name: "Git/GitHub", years: 3 },
   { name: "Subversion", years: 4 },
@@ -42,55 +34,45 @@ const devopsData = [
   { name: "Jenkins", years: 1 },
 ]
 
-const chartConfig = {
-  years: {
-    label: "Years",
-    color: "hsl(var(--chart-1))",
-  }
-} satisfies ChartConfig
+// 最大年数（バーの100%幅）
+const MAX_YEARS = 7
 
-const SkillChart: React.FC<{ data: any[], title: string }> = ({ data, title }) => {
+// スキルバーコンポーネント
+const SkillBar: React.FC<{ skill: SkillData }> = ({ skill }) => {
+  const percentage = (skill.years / MAX_YEARS) * 100
+
+  return (
+    <div className="flex items-center gap-2">
+      <span className="w-24 text-sm text-gray-700 shrink-0">{skill.name}</span>
+      <div className="flex-1 bg-gray-100 rounded h-6 relative overflow-hidden">
+        <div
+          className="bg-emerald-500 h-full rounded-r transition-all duration-500"
+          style={{ width: `${percentage}%` }}
+        />
+      </div>
+      <span className="w-12 text-sm text-gray-600 text-right shrink-0">
+        {skill.years}年
+      </span>
+    </div>
+  )
+}
+
+// スキルチャートコンポーネント
+const SkillChart: React.FC<{ data: SkillData[]; title: string }> = ({
+  data,
+  title,
+}) => {
   return (
     <Card className="w-full md:w-1/3">
       <CardHeader className="px-8 border-b">
         <CardTitle className="text-xl">{title}</CardTitle>
       </CardHeader>
-      <CardContent className="pr-8 py-6 border-b">
-        <ChartContainer config={chartConfig} className="w-full">
-          <BarChart
-            data={data}
-            layout="vertical"
-            margin={{ top: 0, right: 0, left: 0, bottom: 0 }}
-            width={400}
-            height={300}
-          >
-            <CartesianGrid horizontal={true} vertical={false} />
-            <YAxis
-              dataKey="name"
-              type="category"
-              axisLine={false}
-              tickLine={false}
-              width={100}
-              dx={-10}
-            />
-            <XAxis
-              type="number"
-              domain={[0, 6]}
-              tickLine={false}
-              axisLine={false}
-              ticks={[0, 1, 2, 3, 4, 5, 6, 7]}
-            />
-            <ChartTooltip
-              cursor={false}
-              content={<ChartTooltipContent />}
-            />
-            <Bar
-              dataKey="years"
-              fill="#10b981"
-              radius={[0, 4, 4, 0]}
-            />
-          </BarChart>
-        </ChartContainer>
+      <CardContent className="px-6 py-6 border-b">
+        <div className="space-y-3">
+          {data.map((skill) => (
+            <SkillBar key={skill.name} skill={skill} />
+          ))}
+        </div>
       </CardContent>
     </Card>
   )
@@ -98,10 +80,13 @@ const SkillChart: React.FC<{ data: any[], title: string }> = ({ data, title }) =
 
 const SkillsSection: React.FC = () => {
   return (
-    <section id="skills" className="bg-background py-20 bg-gradient-to-br from-white via-emerald-50 to-white">
+    <section
+      id="skills"
+      className="bg-background py-20 bg-gradient-to-br from-white via-emerald-50 to-white"
+    >
       <div className="max-w-7xl mx-auto px-4">
         <h2 className="text-3xl md:text-5xl font-bold mb-12 text-center">Skills</h2>
-        
+
         <div className="mb-12 max-w-xl mx-auto">
           <p className="text-base text-gray-800 leading-relaxed">
             これまで経験したスキルとその経験年数をグラフにしてみました。

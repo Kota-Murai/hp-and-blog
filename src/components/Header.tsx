@@ -1,14 +1,7 @@
-"use client"
 import React from "react"
 import Link from "next/link"
 import Image from "next/image"
-import { MobileNav } from "./MobileNav"
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip"
+import { MobileNavWrapper } from "./MobileNavWrapper"
 
 const Header: React.FC = () => {
   return (
@@ -17,16 +10,18 @@ const Header: React.FC = () => {
         <div className="flex items-center gap-4">
           {/* モバイルナビゲーション */}
           <div className="md:hidden">
-            <MobileNav />
+            <MobileNavWrapper />
           </div>
 
           {/* ロゴとサイト名 */}
-          <Link href="#top" className="flex items-center space-x-2">
+          <Link href="/#top" className="flex items-center space-x-2">
             <Image
               src="/logo.webp"
-              alt="Logo"
+              alt="サイトロゴ"
               width={60}
               height={60}
+              sizes="(max-width: 640px) 48px, (max-width: 768px) 52px, 65px"
+              quality={85}
               className="w-12 h-10 sm:w-[52px] sm:h-12 md:w-[65px] md:h-[60px]"
             />
             <span className="text-base sm:text-lg md:text-xl font-bold whitespace-nowrap">
@@ -36,46 +31,37 @@ const Header: React.FC = () => {
         </div>
 
         {/* デスクトップナビゲーション */}
-        <nav className="hidden md:block">
+        <nav className="hidden md:block" aria-label="メインナビゲーション">
           <ul className="flex items-center gap-6">
             <li>
-              <Link href="#top" className="hover:text-emerald-600 text-sm lg:text-base">
+              <Link href="/#top" className="hover:text-emerald-600 text-sm lg:text-base">
                 トップ
               </Link>
             </li>
             <li>
-              <Link href="#about" className="hover:text-emerald-600 text-sm lg:text-base">
+              <Link href="/#about" className="hover:text-emerald-600 text-sm lg:text-base">
                 このサイトについて
               </Link>
             </li>
             <li>
-              <Link href="#profile" className="hover:text-emerald-600 text-sm lg:text-base">
+              <Link href="/#profile" className="hover:text-emerald-600 text-sm lg:text-base">
                 プロフィール
               </Link>
             </li>
             <li>
-              <Link href="#skills" className="hover:text-emerald-600 text-sm lg:text-base">
+              <Link href="/#skills" className="hover:text-emerald-600 text-sm lg:text-base">
                 スキル
               </Link>
             </li>
             <li>
-              <Link href="#contact" className="hover:text-emerald-600 text-sm lg:text-base">
+              <Link href="/#contact" className="hover:text-emerald-600 text-sm lg:text-base">
                 お問い合わせ
               </Link>
             </li>
             <li>
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <span className="hover:text-emerald-600 text-sm lg:text-base cursor-pointer">
-                      ブログ
-                    </span>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>準備中です</p>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
+              <Link href="/blog" className="hover:text-emerald-600 text-sm lg:text-base">
+                ブログ
+              </Link>
             </li>
           </ul>
         </nav>

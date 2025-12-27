@@ -1,6 +1,51 @@
 import { NextResponse } from "next/server"
 import nodemailer from "nodemailer"
 import { z } from "zod"
+import { headers } from "next/headers"
+
+// レート制限の設定
+const rateLimit = new Map<string, { count: number; timestamp: number }>()
+const RATE_LIMIT_WINDOW = 60 * 1000 // 1分
+const RATE_LIMIT_MAX = 5 // 最大5回
+
+function getClientIp(headersList: Headers): string {
+  // Vercel/CloudFlare等のプロキシからIPを取得
+  const forwarded = headersList.get("x-forwarded-for")
+  if (forwarded) {
+    return forwarded.split(",")[0].trim()
+  }
+  const realIp = headersList.get("x-real-ip")
+  if (realIp) {
+    return realIp
+  }
+  return "unknown"
+}
+
+function checkRateLimit(ip: string): boolean {
+  const now = Date.now()
+  const record = rateLimit.get(ip)
+
+  // 古いレコードをクリーンアップ
+  if (rateLimit.size > 1000) {
+    for (const [key, value] of rateLimit.entries()) {
+      if (now - value.timestamp > RATE_LIMIT_WINDOW) {
+        rateLimit.delete(key)
+      }
+    }
+  }
+
+  if (!record || now - record.timestamp > RATE_LIMIT_WINDOW) {
+    rateLimit.set(ip, { count: 1, timestamp: now })
+    return true
+  }
+
+  if (record.count >= RATE_LIMIT_MAX) {
+    return false
+  }
+
+  record.count++
+  return true
+}
 
 // バリデーションスキーマの定義
 const contactSchema = z.object({
@@ -12,6 +57,17 @@ const contactSchema = z.object({
 
 export async function POST(request: Request) {
   try {
+    // レート制限チェック
+    const headersList = await headers()
+    const clientIp = getClientIp(headersList)
+
+    if (!checkRateLimit(clientIp)) {
+      return NextResponse.json(
+        { error: { message: "送信回数の上限に達しました。しばらく時間をおいてから再度お試しください。" } },
+        { status: 429 }
+      )
+    }
+
     const body = await request.json()
     const parsedData = contactSchema.parse(body)
 
