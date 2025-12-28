@@ -1,4 +1,5 @@
 import React from "react";
+import Link from "next/link";
 import Image from "next/image";
 import { InstagramIcon, XTwitterIcon, GitHubIcon } from "@/components/icons/SocialIcons";
 
@@ -48,7 +49,7 @@ const AboutSection: React.FC = () => {
             主にエンジニアとしての経歴やスキルについてまとめています。<br />
             ブログではプログラミングのことだけではなく趣味などについてもシェアしていきます。<br />
             ご興味ある方は覗いてみてください。<br />
-            <b>※ブログは準備中です</b>
+            <Link href="/blog" className="text-emerald-600 hover:text-emerald-700 underline">ブログはこちら</Link>
           </p>
         </div>
       </section>

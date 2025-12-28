@@ -1,3 +1,4 @@
+import Link from "next/link"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import {
   SiTypescript,
@@ -195,8 +196,7 @@ const SkillsSection: React.FC = () => {
             これまで経験したスキルとその経験年数をグラフにしてみました。
             得意分野はバックエンドですが、フロントエンドも簡単なHP/LPの制作や管理画面の作成などは一通りこなせます。
             AWSの知識もありますので、インフラ周りの構築もちょっとだけできます。
-            詳細については別途こちらの記事をご覧ください。
-            <b>(記事は準備中)</b>
+            詳細については<Link href="/blog/first-post" className="text-emerald-600 hover:text-emerald-700 underline">自己紹介記事</Link>をご覧ください。
           </p>
         </div>
 
