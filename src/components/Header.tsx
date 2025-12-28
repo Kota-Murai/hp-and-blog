@@ -6,7 +6,7 @@ import { MobileNavWrapper } from "./MobileNavWrapper"
 const Header: React.FC = () => {
   return (
     <header className="fixed top-0 left-0 w-full bg-background shadow-md z-50 bg-gradient-to-br from-white via-emerald-100 to-white">
-      <div className="max-w-7xl mx-auto flex justify-between items-center px-4 py-3">
+      <div className="max-w-7xl mx-auto flex justify-between items-center px-4 py-2">
         <div className="flex items-center gap-4">
           {/* モバイルナビゲーション */}
           <div className="md:hidden">

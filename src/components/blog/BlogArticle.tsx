@@ -43,7 +43,7 @@ export default function BlogArticle({ post, isPreview = false }: BlogArticleProp
   const displayDate = post.published_at || post.created_at
 
   return (
-    <article className={`min-h-screen bg-gradient-to-br from-white via-emerald-50 to-white pb-20 ${isPreview ? 'pt-8' : 'pt-32'}`}>
+    <article className={`min-h-screen bg-gradient-to-br from-white via-emerald-50 to-white pb-16 ${isPreview ? 'pt-8' : 'pt-32'}`}>
       <div className="max-w-3xl mx-auto px-4">
         {/* プレビューバナー */}
         {isPreview && (
@@ -130,7 +130,7 @@ export default function BlogArticle({ post, isPreview = false }: BlogArticleProp
         )}
 
         {/* 記事本文 */}
-        <div className="prose prose-lg max-w-none prose-emerald prose-headings:font-bold prose-a:text-emerald-600 prose-code:bg-gray-100 prose-code:px-1 prose-code:rounded">
+        <div className="prose max-w-none prose-emerald prose-headings:font-bold prose-headings:mt-6 prose-headings:mb-3 prose-p:my-3 prose-ul:my-3 prose-ol:my-3 prose-li:my-1 prose-a:text-emerald-600 prose-code:bg-gray-100 prose-code:px-1 prose-code:rounded">
           <ReactMarkdown
             remarkPlugins={[remarkGfm]}
             rehypePlugins={[rehypeRaw, rehypeHighlight]}

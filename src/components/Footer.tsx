@@ -1,3 +1,6 @@
+'use client'
+
+import { usePathname } from 'next/navigation'
 import { InstagramIcon, XTwitterIcon, GitHubIcon } from "@/components/icons/SocialIcons"
 
 // SNSリンクコンポーネント（デスクトップ用：WebURL）
@@ -66,9 +69,13 @@ const SnsLinksMobile: React.FC = () => (
   </div>
 )
 
-const Footer = () => {
+const Footer: React.FC = () => {
+  const pathname = usePathname()
+  // トップページ（/）のみフッターを固定表示
+  const isTopPage = pathname === '/'
+
   return (
-    <footer id="site-footer" className="w-full bg-gradient-to-br from-white via-emerald-100 to-white py-4 px-4 md:fixed md:bottom-0 z-[49]">
+    <footer id="site-footer" className={`w-full bg-gradient-to-br from-white via-emerald-100 to-white py-3 px-4 z-[49] ${isTopPage ? 'md:fixed md:bottom-0' : ''}`}>
       <div className="max-w-7xl mx-auto flex flex-col items-center gap-3">
         {/* SNSリンク（CSSメディアクエリで出し分け） */}
         <SnsLinksDesktop />
