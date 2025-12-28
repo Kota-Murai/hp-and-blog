@@ -90,7 +90,7 @@ export default function TagList({
             {tags.map((tag) => (
               <tr key={tag.id}>
                 <td className="px-4 py-4 whitespace-nowrap">
-                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-sm font-medium bg-gray-100 text-gray-800">
+                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-sm font-medium bg-amber-50 text-amber-700">
                     {tag.name}
                   </span>
                 </td>

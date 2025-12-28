@@ -423,13 +423,13 @@ export default function BlogEditor({
                   return (
                     <span
                       key={tag.id}
-                      className="inline-flex items-center gap-1 px-2 py-1 bg-emerald-100 text-emerald-800 rounded-full text-sm"
+                      className="inline-flex items-center gap-1 px-2 py-1 bg-amber-100 text-amber-800 rounded-full text-sm"
                     >
                       {tag.name}
                       <button
                         type="button"
                         onClick={() => toggleTag(tag.id)}
-                        className="hover:bg-emerald-200 rounded-full p-0.5"
+                        className="hover:bg-amber-200 rounded-full p-0.5"
                       >
                         <X className="h-3 w-3" />
                       </button>

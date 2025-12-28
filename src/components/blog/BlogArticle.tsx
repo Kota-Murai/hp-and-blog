@@ -107,7 +107,7 @@ export default function BlogArticle({ post, isPreview = false }: BlogArticleProp
                 <Link
                   key={tag.id}
                   href={isPreview ? `/admin/blog/tag/${tag.slug}/preview` : `/blog/tag/${tag.slug}`}
-                  className="text-xs px-2 py-1 bg-gray-100 text-gray-600 rounded hover:bg-gray-200 transition-colors"
+                  className="text-xs px-2 py-1 bg-amber-50 text-amber-700 rounded hover:bg-amber-100 transition-colors"
                 >
                   #{tag.name}
                 </Link>
