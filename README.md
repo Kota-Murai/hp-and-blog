@@ -154,7 +154,7 @@ AWS Amplifyにデプロイしています。`main` ブランチへのプッシ�
 **村井洸太** (Kota Murai)
 
 - ウェブサイト: [toppomura.jp](https://www.toppomura.jp/)
-- GitHub: [@toppomura](https://github.com/toppomura)
+- GitHub: [@Kota-Murai](https://github.com/Kota-Murai)
 
 ## ライセンス
 
