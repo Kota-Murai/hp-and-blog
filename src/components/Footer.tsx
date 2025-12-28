@@ -68,13 +68,12 @@ const SnsLinksMobile: React.FC = () => (
 
 const Footer = () => {
   return (
-    <footer id="site-footer" className="w-full bg-gradient-to-br from-white via-emerald-100 to-white py-6 px-4 md:fixed md:bottom-0 z-[49]">
-      <div className="max-w-7xl mx-auto flex flex-col items-center gap-4">
+    <footer id="site-footer" className="w-full bg-gradient-to-br from-white via-emerald-100 to-white py-4 px-4 md:fixed md:bottom-0 z-[49]">
+      <div className="max-w-7xl mx-auto flex flex-col items-center gap-3">
         {/* SNSリンク（CSSメディアクエリで出し分け） */}
         <SnsLinksDesktop />
         <SnsLinksMobile />
         <p className="text-sm text-gray-600 text-center">
-          このサイトは日本国内のユーザー向けに運営されています<br />
           © 2024 Kota Murai. All rights reserved.
         </p>
       </div>

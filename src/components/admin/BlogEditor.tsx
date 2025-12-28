@@ -20,6 +20,7 @@ import 'highlight.js/styles/github.css'
 import { Upload, Image as ImageIcon, Loader2, Eye, X, Plus, Trash2 } from 'lucide-react'
 import { toast } from 'sonner'
 import type { Category, Tag } from '@/types/blog'
+import ImageCropModal from './ImageCropModal'
 
 interface BlogEditorProps {
   authorId: string
@@ -67,6 +68,8 @@ export default function BlogEditor({
   const [showPreview, setShowPreview] = useState(false)
   const [isUploadingThumbnail, setIsUploadingThumbnail] = useState(false)
   const [isUploadingContent, setIsUploadingContent] = useState(false)
+  const [cropModalOpen, setCropModalOpen] = useState(false)
+  const [cropImageSrc, setCropImageSrc] = useState<string>('')
 
   // 新規タグを作成
   const handleCreateTag = async () => {
@@ -156,24 +159,40 @@ export default function BlogEditor({
     }
   }
 
-  // サムネイル画像のアップロード
-  const handleThumbnailUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  // サムネイル画像の選択時にトリミングモーダルを開く
+  const handleThumbnailSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (!file) return
 
+    // 画像をData URLとして読み込む
+    const reader = new FileReader()
+    reader.onload = () => {
+      setCropImageSrc(reader.result as string)
+      setCropModalOpen(true)
+    }
+    reader.readAsDataURL(file)
+
+    // inputをリセット
+    if (thumbnailInputRef.current) {
+      thumbnailInputRef.current.value = ''
+    }
+  }
+
+  // トリミング完了時にアップロード
+  const handleCropComplete = async (croppedBlob: Blob) => {
     setIsUploadingThumbnail(true)
     setError('')
 
+    const file = new File([croppedBlob], 'thumbnail.jpg', { type: 'image/jpeg' })
     const url = await uploadImage(file, 'thumbnails', 'thumbnail')
+
     if (url) {
       setThumbnailUrl(url)
     }
 
     setIsUploadingThumbnail(false)
-    // inputをリセット
-    if (thumbnailInputRef.current) {
-      thumbnailInputRef.current.value = ''
-    }
+    // Data URLをクリア
+    setCropImageSrc('')
   }
 
   // 本文用画像のアップロード
@@ -524,7 +543,7 @@ export default function BlogEditor({
                 ref={thumbnailInputRef}
                 type="file"
                 accept="image/jpeg,image/png,image/webp,image/gif"
-                onChange={handleThumbnailUpload}
+                onChange={handleThumbnailSelect}
                 className="hidden"
               />
               <Button
@@ -697,6 +716,15 @@ export default function BlogEditor({
           </div>
         </div>
       </form>
+
+      {/* サムネイル画像トリミングモーダル */}
+      <ImageCropModal
+        isOpen={cropModalOpen}
+        onClose={() => setCropModalOpen(false)}
+        imageSrc={cropImageSrc}
+        onCropComplete={handleCropComplete}
+        aspectRatio={16 / 9}
+      />
     </div>
   )
 }
