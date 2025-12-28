@@ -248,7 +248,7 @@ export default async function CategoryPreviewPage({ params, searchParams }: Prop
                               <Link
                                 key={t.id}
                                 href={`/admin/blog/tag/${t.slug}/preview`}
-                                className="text-xs px-2 py-1 bg-gray-100 text-gray-600 rounded hover:bg-gray-200 transition-colors"
+                                className="text-xs px-2 py-1 bg-amber-50 text-amber-700 rounded hover:bg-amber-100 transition-colors"
                               >
                                 #{t.name}
                               </Link>
@@ -329,7 +329,7 @@ export default async function CategoryPreviewPage({ params, searchParams }: Prop
                                 <Link
                                   key={t.id}
                                   href={`/admin/blog/tag/${t.slug}/preview`}
-                                  className="text-xs px-2 py-1 bg-gray-100 text-gray-600 rounded hover:bg-gray-200 transition-colors"
+                                  className="text-xs px-2 py-1 bg-amber-50 text-amber-700 rounded hover:bg-amber-100 transition-colors"
                                 >
                                   #{t.name}
                                 </Link>

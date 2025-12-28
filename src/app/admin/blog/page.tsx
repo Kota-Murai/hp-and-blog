@@ -137,7 +137,7 @@ export default async function AdminBlogList({ searchParams }: Props) {
                     {post.tags.slice(0, 2).map((pt) => (
                       <span
                         key={pt.tag.id}
-                        className="text-xs px-2 py-0.5 bg-gray-100 text-gray-600 rounded"
+                        className="text-xs px-2 py-0.5 bg-amber-50 text-amber-700 rounded"
                       >
                         #{pt.tag.name}
                       </span>
@@ -222,7 +222,7 @@ export default async function AdminBlogList({ searchParams }: Props) {
                               {post.tags.slice(0, 3).map((pt) => (
                                 <span
                                   key={pt.tag.id}
-                                  className="text-xs px-2 py-0.5 bg-gray-100 text-gray-600 rounded"
+                                  className="text-xs px-2 py-0.5 bg-amber-50 text-amber-700 rounded"
                                 >
                                   #{pt.tag.name}
                                 </span>

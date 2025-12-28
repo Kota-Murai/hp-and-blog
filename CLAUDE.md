@@ -105,6 +105,20 @@ npx prisma studio     # GUI管理ツール
 - `DATABASE_URL`
 - `ANALYTICS_API_KEY` - GitHub Actionsからの集計API呼び出し用
 
+### AWS Amplify環境変数
+
+Amplifyでは環境変数はビルド時のみ利用可能で、ランタイム（Lambda）には自動的に渡されない。
+`amplify.yml`で`.env.production`ファイルを生成することで対応:
+
+```yaml
+build:
+  commands:
+    - echo "DATABASE_URL=$DATABASE_URL" >> .env.production
+    - npm run build
+```
+
+**注意**: `next.config.js`の`env`設定でDATABASE_URLを公開するとクライアントバンドルに含まれるため、上記の方法を使用すること。
+
 ## 関連ドキュメント
 
 - @../仕様書/開発方針/開発方針.md
