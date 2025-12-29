@@ -2,7 +2,7 @@ import { MetadataRoute } from 'next'
 import { prisma } from '@/lib/prisma'
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://toppomura.jp'
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.toppomura.jp'
 
   // 公開記事を取得
   const posts = await prisma.blog_posts.findMany({
